@@ -1,3 +1,7 @@
+STACK_NAME=yyl-lambda-stack-001
+DEPLOYMENT_BUCKET=yyl-cloudformation-deployment-bucket
+LAMBDA_NAME=yyl-lambda-function-001
+
 display_status() {
   echo ">>> $1 <<<" 1>&2
 }

@@ -2,4 +2,5 @@
 set -euo pipefail
 cd $(dirname $0)/..
 
-aws cloudformation describe-stack-events --stack-name yyl-lambda-stack-001
+source ./auto/set-env
+aws cloudformation describe-stack-events --stack-name ${STACK_NAME}

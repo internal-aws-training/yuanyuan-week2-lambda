@@ -98,16 +98,10 @@ Resources:
     Type: AWS::S3::Bucket
     DependsOn:
       - MyLambdaInvokePermission
-    DeletionPolicy: Retain
     Properties: 
       BucketName: !Ref SourceBucketName
       VersioningConfiguration: 
         Status: Enabled
-      PublicAccessBlockConfiguration: 
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBucakets: true
       NotificationConfiguration:
         LambdaConfigurations:
           - Event: s3:ObjectCreated:*
@@ -130,6 +124,7 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+        
 Outputs:
   SourceBucket:
     Description: Source Bucket

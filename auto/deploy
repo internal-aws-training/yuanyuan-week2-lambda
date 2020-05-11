@@ -8,8 +8,6 @@ source ./auto/set-env
 # ./auto/build
 # ENV=${ENV} ./auto/package
 
-STACK_NAME=yyl-lambda-stack-001
-
 display_status "INFO: Deploying stack ${STACK_NAME}"
 
 aws cloudformation deploy \
