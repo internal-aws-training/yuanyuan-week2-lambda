@@ -1,0 +1,24 @@
+#!/bin/bash
+set -euo pipefail
+cd $(dirname $0)/..
+
+source ./auto/set-env
+# ENV=${ENV:-test}
+
+# ./auto/build
+# ENV=${ENV} ./auto/package
+
+STACK_NAME=yyl-lambda-stack-001
+
+display_status "INFO: Deploying stack ${STACK_NAME}"
+
+aws cloudformation deploy \
+  --template-file ./aws/cloudformation/template.yml \
+  --stack-name ${STACK_NAME} \
+  --capabilities CAPABILITY_NAMED_IAM
+
+# Update stack when stack is existing
+# aws cloudformation update-stack \
+#   --stack-name ${STACK_NAME} \
+#   --template-url ./aws/cloudformation/template.yml \
+#   --capabilities CAPABILITY_NAMED_IAM

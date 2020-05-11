@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+cd $(dirname $0)/..
+
+aws cloudformation describe-stack-events --stack-name yyl-lambda-stack-001
