@@ -1,6 +1,9 @@
 STACK_NAME=yyl-lambda-stack-001
-DEPLOYMENT_BUCKET=yyl-cloudformation-deployment-bucket
+DEPLOYMENT_BUCKET_NAME=yyl-cloudformation-deployment
+SOURCE_BUCKET_NAME=yyl-s3-bucket-001
+TARGET_BUCKET_NAME=yyl-s3-target-bucket-001
 LAMBDA_NAME=yyl-lambda-function-001
+REGION=ap-southeast-1
 
 display_status() {
   echo ">>> $1 <<<" 1>&2

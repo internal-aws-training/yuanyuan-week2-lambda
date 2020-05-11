@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+cd $(dirname $0)/..
+
+source ./set-env
+aws cloudformation validate-template --template-url https://${DEPLOYMENT_BUCKET_NAME}.s3-ap-southeast-1.amazonaws.com/template.yml

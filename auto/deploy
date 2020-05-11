@@ -5,18 +5,18 @@ cd $(dirname $0)/..
 source ./auto/set-env
 # ENV=${ENV:-test}
 
-# ./auto/build
-# ENV=${ENV} ./auto/package
+# Below command can be use to create bucket,
+# but there is a soft limit of 100 S3 buckets per AWS account.
+# So at this moment create bucktet failed by aws-cli.
+#display_status "Step0: Create ${DEPLOYMENT_BUCKET_NAME} bucket"
+#aws s3 mb s3://${DEPLOYMENT_BUCKET_NAME} --region ${REGION}
 
-display_status "INFO: Deploying stack ${STACK_NAME}"
+display_status "Step1: Upload zip file to ${DEPLOYMENT_BUCKET_NAME} bucket"
+aws s3 cp ./yuanyuan-lambda-function-001.zip s3://${DEPLOYMENT_BUCKET_NAME}
+
+display_status "Step2: Deploy ${STACK_NAME} stack"
 
 aws cloudformation deploy \
   --template-file ./aws/cloudformation/template.yml \
   --stack-name ${STACK_NAME} \
   --capabilities CAPABILITY_NAMED_IAM
-
-# Update stack when stack is existing
-# aws cloudformation update-stack \
-#   --stack-name ${STACK_NAME} \
-#   --template-url ./aws/cloudformation/template.yml \
-#   --capabilities CAPABILITY_NAMED_IAM

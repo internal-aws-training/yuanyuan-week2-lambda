@@ -6,9 +6,9 @@ Parameters:
     Description: Source Bucket Name
     Default: yyl-s3-bucket-001
     Type: String
-  ResultBucketName:
+  TargetBucketName:
     Description: Source Bucket Name
-    Default: yyl-s3-bucket-result-001
+    Default: yyl-s3-target-bucket-001
     Type: String
   LambdaFunctionName:
     Description: Lambda Function Name
@@ -83,7 +83,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:PutObject
-                Resource: !Sub arn:aws:s3:::${ResultBucketName}/*
+                Resource: !Sub arn:aws:s3:::${TargetBucketName}/*
   
   MyLambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -96,6 +96,7 @@ Resources:
 
   SourceBucket:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     DependsOn:
       - MyLambdaInvokePermission
     Properties: 
@@ -109,14 +110,14 @@ Resources:
               S3Key:
                 Rules:
                   - Name: suffix
-                    Value: .csv
+                    Value: .txt
             Function: !GetAtt MyLambda.Arn
 
   ResultBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties: 
-      BucketName: !Ref ResultBucketName
+      BucketName: !Ref TargetBucketName
       VersioningConfiguration: 
         Status: Enabled
       PublicAccessBlockConfiguration: 
@@ -124,14 +125,14 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-        
+
 Outputs:
   SourceBucket:
     Description: Source Bucket
     Value: !Ref SourceBucketName
   ResultBucket:
     Description: Result Bucket
-    Value: !Ref ResultBucketName
+    Value: !Ref TargetBucketName
   MyLambda:
     Description: Lambda for practice
     Value: !Ref LambdaFunctionName
