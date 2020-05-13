@@ -43,7 +43,7 @@ Resources:
       Role: !GetAtt MyLambdaRole.Arn
       Handler: index.handler
       Runtime: nodejs12.x
-      CodeUri: s3://yyl-cloudformation-deployment/yyl-lambda-function-001.zip
+      CodeUri: s3://yyl-cloudformation-deployment/yyl-lambda-function-003.zip
       MemorySize: 128
       Timeout: 3     
 

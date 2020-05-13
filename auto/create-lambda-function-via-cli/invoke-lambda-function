@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+cd $(dirname $0)/..
+
+source ./auto/create-lambda-function-via-cli/set-env
+
+aws lambda invoke \
+  --function-name yyl-lambda-function-001 \
+  out --log-type Tail \
+  --query 'LogResult' \
+  --output text |  base64 -D
+# aws lambda invoke --function-name ${LAMBDA_NAME} --payload '{"key": "value"}' out
+# sed -i'' -e 's/"//g' out
+sleep 15
+aws logs get-log-events --log-group-name /aws/lambda/${LAMBDA_NAME} --log-stream-name $(cat out) --limit 100

@@ -12,7 +12,7 @@ source ./auto/set-env
 #aws s3 mb s3://${DEPLOYMENT_BUCKET_NAME} --region ${REGION}
 
 display_status "Step1: Upload zip file to ${DEPLOYMENT_BUCKET_NAME} bucket"
-aws s3 cp ./yuanyuan-lambda-function-001.zip s3://${DEPLOYMENT_BUCKET_NAME}
+./auto/upload-zip-file
 
 display_status "Step2: Deploy ${STACK_NAME} stack"
 

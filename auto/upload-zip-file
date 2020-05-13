@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+cd $(dirname $0)/..
+
+source ./auto/set-env
+aws s3 cp ./output/${ZIP_FILE_NAME}.zip s3://${DEPLOYMENT_BUCKET_NAME}

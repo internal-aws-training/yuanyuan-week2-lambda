@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euo pipefail
+cd $(dirname $0)/..
+
+source ./set-env
+
+BASIC_EXECUTION_ROLE=AWSLambdaBasicExecutionRole
+
+display_status "Step1: Create role"
+aws iam create-role \
+  --role-name ${ROLE_NAME} \
+  --assume-role-policy-document \
+  ./auto/create-lambda-function-via-cli/lambda-role-policy.json 
+
+display_status "Step2: Attach ${BASIC_EXECUTION_ROLE} police to role"
+aws iam attach-role-policy \
+  --role-name  ${ROLE_NAME}\
+  --policy-arn arn:aws:iam::aws:policy/service-role/${BASIC_EXECUTION_ROLE}
+
+display_status "Step3: create lambda function"
+aws lambda create-function \
+  --function-name ${LAMBDA_NAME} \
+  --zip-file fileb://output/${ZIP_FILE_NAME}.zip \
+  --handler index.handler --runtime nodejs12.x \
+  --role arn:aws:iam::954088256298:role/${ROLE_NAME}

@@ -1,5 +1,6 @@
 STACK_NAME=yyl-lambda-stack-001
 DEPLOYMENT_BUCKET_NAME=yyl-cloudformation-deployment
+ZIP_FILE_NAME=yyl-lambda-function-003
 SOURCE_BUCKET_NAME=yyl-s3-bucket-001
 TARGET_BUCKET_NAME=yyl-s3-target-bucket-001
 LAMBDA_NAME=yyl-lambda-function-001
