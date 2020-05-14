@@ -26,107 +26,122 @@ Parameters:
     Description: Lambda Role Name
     Default: yyl-lambda-s3-role-001
     Type: String
-
 Resources:
   MyLambdaLogGroup:
     Type: AWS::Logs::LogGroup
-    Properties: 
-      LogGroupName: !Ref LambdaLogGroupName
+    Properties:
+      LogGroupName:
+        Ref: LambdaLogGroupName
       RetentionInDays: 7
-
   MyLambda:
     Type: AWS::Serverless::Function
     DependsOn:
-      - MyLambdaLogGroup
+    - MyLambdaLogGroup
     Properties:
-      FunctionName: !Ref LambdaFunctionName
-      Role: !GetAtt MyLambdaRole.Arn
+      FunctionName:
+        Ref: LambdaFunctionName
+      Role:
+        Fn::GetAtt:
+        - MyLambdaRole
+        - Arn
       Handler: index.handler
       Runtime: nodejs12.x
-      CodeUri: ../../output/
+      CodeUri: s3://yyl-cloudformation-deployment/lambda/week2/b0bee413237fa973da379f78d5a794a2
       MemorySize: 128
-      Timeout: 3     
-
+      Timeout: 3
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Ref LambdaRoleName
+      RoleName:
+        Ref: LambdaRoleName
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
       Policies:
-        - PolicyName: !Ref LambdaPolicyName
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:*
-                Resource: arn:aws:logs:*:*:*
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:GetObjectVersion
-                Resource: !Sub arn:aws:s3:::${SourceBucketName}/*
-              - Effect: Allow
-                Action:
-                  - s3:PutObject
-                Resource: !Sub arn:aws:s3:::${TargetBucketName}/*
-  
+      - PolicyName:
+          Ref: LambdaPolicyName
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:GetObjectVersion
+            Resource:
+              Fn::Sub: arn:aws:s3:::${SourceBucketName}/*
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            Resource:
+              Fn::Sub: arn:aws:s3:::${TargetBucketName}/*
   MyLambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt MyLambda.Arn
+      FunctionName:
+        Fn::GetAtt:
+        - MyLambda
+        - Arn
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
-      SourceAccount: !Ref AWS::AccountId
-      SourceArn: !Sub arn:aws:s3:::${SourceBucketName}
-
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::Sub: arn:aws:s3:::${SourceBucketName}
   SourceBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     DependsOn:
-      - MyLambdaInvokePermission
-    Properties: 
-      BucketName: !Ref SourceBucketName
-      VersioningConfiguration: 
+    - MyLambdaInvokePermission
+    Properties:
+      BucketName:
+        Ref: SourceBucketName
+      VersioningConfiguration:
         Status: Enabled
       NotificationConfiguration:
         LambdaConfigurations:
-          - Event: s3:ObjectCreated:*
-            Filter:
-              S3Key:
-                Rules:
-                  - Name: suffix
-                    Value: .txt
-            Function: !GetAtt MyLambda.Arn
-
+        - Event: s3:ObjectCreated:*
+          Filter:
+            S3Key:
+              Rules:
+              - Name: suffix
+                Value: .txt
+          Function:
+            Fn::GetAtt:
+            - MyLambda
+            - Arn
   ResultBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
-    Properties: 
-      BucketName: !Ref TargetBucketName
-      VersioningConfiguration: 
+    Properties:
+      BucketName:
+        Ref: TargetBucketName
+      VersioningConfiguration:
         Status: Enabled
-      PublicAccessBlockConfiguration: 
+      PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-
 Outputs:
   SourceBucket:
     Description: Source Bucket
-    Value: !Ref SourceBucketName
+    Value:
+      Ref: SourceBucketName
   ResultBucket:
     Description: Result Bucket
-    Value: !Ref TargetBucketName
+    Value:
+      Ref: TargetBucketName
   MyLambda:
     Description: Lambda for practice
-    Value: !Ref LambdaFunctionName
+    Value:
+      Ref: LambdaFunctionName

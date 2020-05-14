@@ -16,10 +16,8 @@
     "url": "https://github.com/internal-aws-training/yuanyuan-week2-lambda/issues"
   },
   "homepage": "https://github.com/internal-aws-training/yuanyuan-week2-lambda#readme",
-  "dependencies": {
-    "aws-sdk": "^2.674.0"
-  },
   "devDependencies": {
+    "aws-sdk": "^2.674.0",
     "eslint": "^7.0.0"
   }
 }

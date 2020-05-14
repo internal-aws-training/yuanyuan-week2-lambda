@@ -3,20 +3,12 @@ set -euo pipefail
 cd $(dirname $0)/..
 
 source ./auto/set-env
-# ENV=${ENV:-test}
 
-# Below command can be use to create bucket,
-# but there is a soft limit of 100 S3 buckets per AWS account.
-# So at this moment create bucktet failed by aws-cli.
-#display_status "Step0: Create ${DEPLOYMENT_BUCKET_NAME} bucket"
-#aws s3 mb s3://${DEPLOYMENT_BUCKET_NAME} --region ${REGION}
+./auto/package
 
-display_status "Step1: Upload zip file to ${DEPLOYMENT_BUCKET_NAME} bucket"
-./auto/upload-zip-file
-
-display_status "Step2: Deploy ${STACK_NAME} stack"
+display_status "Deploy ${STACK_NAME} stack"
 
 aws cloudformation deploy \
-  --template-file ./aws/cloudformation/template.yml \
+  --template-file ${AWS_CLOUFROMATION_TEMPLATE_URL}/${TRANFORMED_TEMPLATE} \
   --stack-name ${STACK_NAME} \
   --capabilities CAPABILITY_NAMED_IAM

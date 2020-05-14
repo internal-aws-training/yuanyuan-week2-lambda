@@ -1,6 +1,7 @@
 STACK_NAME=yyl-lambda-stack-001
 DEPLOYMENT_BUCKET_NAME=yyl-cloudformation-deployment
-ZIP_FILE_NAME=yyl-lambda-function-003
+AWS_CLOUFROMATION_TEMPLATE_URL=./aws/cloudformation
+TRANFORMED_TEMPLATE=packaged-template.yml
 SOURCE_BUCKET_NAME=yyl-s3-bucket-001
 TARGET_BUCKET_NAME=yyl-s3-target-bucket-001
 LAMBDA_NAME=yyl-lambda-function-001
