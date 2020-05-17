@@ -2,9 +2,8 @@
 set -euo pipefail
 cd $(dirname $0)/..
 
-source ./auto/set-env
 DEPLOYMENT_STACK_NAME=yyl-deployment-stack
-
+source ./auto/set-env
 display_status "Deploy ${DEPLOYMENT_STACK_NAME} stack"
 
 aws cloudformation deploy \

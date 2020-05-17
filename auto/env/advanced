@@ -1,10 +1,9 @@
-STACK_NAME=yyl-lambda-stack-001
+STACK_NAME=yyl-week2-advanced-stack
 DEPLOYMENT_BUCKET_NAME=yyl-cloudformation-deployment
 AWS_CLOUFROMATION_TEMPLATE_URL=./aws/cloudformation
+DRAFTED_TEMPLATE=template.advanced.yml
 TRANFORMED_TEMPLATE=packaged-template.yml
-SOURCE_BUCKET_NAME=yyl-s3-bucket-001
-TARGET_BUCKET_NAME=yyl-s3-target-bucket-001
-LAMBDA_NAME=yyl-lambda-function-001
+LAMBDA_NAME=yyl-week2-advanced-lambda-function-001
 REGION=ap-southeast-1
 
 display_status() {

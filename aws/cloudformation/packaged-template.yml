@@ -1,30 +1,30 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
-Description: For aws training - week 2
+Description: For aws training - week 2 - Basic phase
 Parameters:
   SourceBucketName:
     Description: Source Bucket Name
-    Default: yyl-s3-bucket-001
+    Default: yyl-week2-basic-s3-source-bucket
     Type: String
   TargetBucketName:
     Description: Source Bucket Name
-    Default: yyl-s3-target-bucket-001
+    Default: yyl-week2-basic-s3-target-bucket
     Type: String
   LambdaFunctionName:
     Description: Lambda Function Name
-    Default: yyl-lambda-function-001
+    Default: yyl-week2-basic-lambda-function
     Type: String
   LambdaPolicyName:
     Description: Policy Name
-    Default: yyl-lambda-policy-001
+    Default: yyl-week2-basic-lambda-policy
     Type: String
   LambdaLogGroupName:
     Description: Lambda LogGroup Name
-    Default: yyl-lambda-log-group-001
+    Default: yyl-week2-basic-lambda-log-group
     Type: String
   LambdaRoleName:
     Description: Lambda Role Name
-    Default: yyl-lambda-s3-role-001
+    Default: yyl-week2-basic-lambda-role
     Type: String
 Resources:
   MyLambdaLogGroup:
@@ -46,7 +46,7 @@ Resources:
         - Arn
       Handler: index.handler
       Runtime: nodejs12.x
-      CodeUri: s3://yyl-cloudformation-deployment/lambda/week2/b0bee413237fa973da379f78d5a794a2
+      CodeUri: s3://yyl-cloudformation-deployment/lambda/week2/6bad3483b92bfbe9c96ff10d6f19a236
       MemorySize: 128
       Timeout: 3
   MyLambdaRole:
