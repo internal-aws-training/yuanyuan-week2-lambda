@@ -2,6 +2,12 @@
 set -euo pipefail
 cd $(dirname $0)/..
 
-PHASE=advanced
+PHASE=advanced-sns
 source ./auto/env/${PHASE}
 ./auto/deploy ${PHASE}
+
+display_status "Test subscribption"
+aws sns publish \
+  --message Testing \
+  --subject Test \
+  --topic-arn arn:aws:sns:ap-southeast-1:954088256298:yyl-sns-topic-002

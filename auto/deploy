@@ -15,6 +15,6 @@ display_status "Step 3"
 display_status "Deploy ${STACK_NAME} stack"
 
 aws cloudformation deploy \
-  --template-file ${AWS_CLOUFROMATION_TEMPLATE_URL}/${TRANFORMED_TEMPLATE} \
+  --template-file ${PACKAGED_TEMPLATE_URL}/${PACKAGED_TEMPLATE} \
   --stack-name ${STACK_NAME} \
   --capabilities CAPABILITY_NAMED_IAM

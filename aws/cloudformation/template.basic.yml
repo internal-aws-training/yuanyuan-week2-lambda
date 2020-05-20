@@ -18,10 +18,6 @@ Parameters:
     Description: Policy Name
     Default: yyl-week2-basic-lambda-policy
     Type: String
-  LambdaLogGroupName:
-    Description: Lambda LogGroup Name
-    Default: yyl-week2-basic-lambda-log-group
-    Type: String
   LambdaRoleName:
     Description: Lambda Role Name
     Default: yyl-week2-basic-lambda-role
@@ -31,7 +27,7 @@ Resources:
   MyLambdaLogGroup:
     Type: AWS::Logs::LogGroup
     Properties: 
-      LogGroupName: !Ref LambdaLogGroupName
+      LogGroupName: !Sub /aws/lambda/${LambdaFunctionName}
       RetentionInDays: 7
 
   MyLambda:

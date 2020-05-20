@@ -2,6 +2,11 @@ const { S3Client } = require('./clients');
 
 const process = async event => {
   const s3Source = event.Records[0].s3;
+  const snsMessage = event.Records[0].Sns.Message;
+  if (snsMessage) {
+    console.log('Message received from SNS:', snsMessage);
+    // callback(null, "Success");
+  }
   if (s3Source) {
     const {
       bucket: { name },
