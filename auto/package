@@ -3,7 +3,7 @@ set -euo pipefail
 cd $(dirname $0)/..
 
 source ./auto/env/$1
-display_status "Package local lambdafunction to ${DEPLOYMENT_BUCKET_NAME} backage and output the tranformed template ${TRANFORMED_TEMPLATE} to ${PACKAGED_TEMPLATE_URL} folder"
+display_status "Package local lambdafunction to ${DEPLOYMENT_BUCKET_NAME} backage and output the tranformed template ${PACKAGED_TEMPLATE} to ${PACKAGED_TEMPLATE_URL} folder"
 
 aws cloudformation package \
   --template-file ${TEMPLATE_URL}/${TEMPLATE} \
