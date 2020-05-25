@@ -1,8 +1,0 @@
-ZIP_FILE_NAME=yyl-lambda-function-003
-LAMBDA_NAME=yyl-lambda-function-003
-ROLE_NAME=yyl-lambda-role-003
-REGION=ap-southeast-1
-
-display_status() {
-  echo ">>> $1 <<<" 1>&2
-}

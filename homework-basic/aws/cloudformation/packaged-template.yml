@@ -1,0 +1,143 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: For aws training - week 2 - Basic phase
+Parameters:
+  SourceBucketName:
+    Description: Source Bucket Name
+    Default: yyl-week2-basic-s3-source-bucket
+    Type: String
+  TargetBucketName:
+    Description: Source Bucket Name
+    Default: yyl-week2-basic-s3-target-bucket
+    Type: String
+  LambdaFunctionName:
+    Description: Lambda Function Name
+    Default: yyl-week2-basic-lambda-function
+    Type: String
+  LambdaPolicyName:
+    Description: Policy Name
+    Default: yyl-week2-basic-lambda-policy
+    Type: String
+  LambdaRoleName:
+    Description: Lambda Role Name
+    Default: yyl-week2-basic-lambda-role
+    Type: String
+Resources:
+  MyLambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${LambdaFunctionName}
+      RetentionInDays: 7
+  MyLambda:
+    Type: AWS::Serverless::Function
+    DependsOn:
+    - MyLambdaLogGroup
+    Properties:
+      FunctionName:
+        Ref: LambdaFunctionName
+      Role:
+        Fn::GetAtt:
+        - MyLambdaRole
+        - Arn
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: s3://yyl-deployment-bucket/lambda/week2/d584df0ebc273d39d96bc714710cd087
+      MemorySize: 128
+      Timeout: 3
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Ref: LambdaRoleName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName:
+          Ref: LambdaPolicyName
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:GetObjectVersion
+            Resource:
+              Fn::Sub: arn:aws:s3:::${SourceBucketName}/*
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            Resource:
+              Fn::Sub: arn:aws:s3:::${TargetBucketName}/*
+  MyLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - MyLambda
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::Sub: arn:aws:s3:::${SourceBucketName}
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    DependsOn:
+    - MyLambdaInvokePermission
+    Properties:
+      BucketName:
+        Ref: SourceBucketName
+      VersioningConfiguration:
+        Status: Enabled
+      NotificationConfiguration:
+        LambdaConfigurations:
+        - Event: s3:ObjectCreated:*
+          Filter:
+            S3Key:
+              Rules:
+              - Name: suffix
+                Value: .txt
+          Function:
+            Fn::GetAtt:
+            - MyLambda
+            - Arn
+  ResultBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName:
+        Ref: TargetBucketName
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+Outputs:
+  SourceBucket:
+    Description: Source Bucket
+    Value:
+      Ref: SourceBucketName
+  ResultBucket:
+    Description: Result Bucket
+    Value:
+      Ref: TargetBucketName
+  MyLambda:
+    Description: Lambda for practice
+    Value:
+      Ref: LambdaFunctionName

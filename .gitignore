@@ -3,4 +3,3 @@ out*
 *.csv
 *.txt
 node_modules
-packaged-template.yml

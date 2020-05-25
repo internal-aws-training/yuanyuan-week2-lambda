@@ -1,7 +1,0 @@
-#!/bin/bash
-set -euo pipefail
-cd $(dirname $0)/..
-
-PHASE=basic
-source ./auto/env/${PHASE}
-./auto/deploy ${PHASE}

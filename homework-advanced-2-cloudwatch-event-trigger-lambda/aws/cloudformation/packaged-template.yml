@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: For aws training - week 2 - Advanced phase
+Parameters:
+  LambdaFunctionName:
+    Description: Lambda Function Name
+    Default: yyl-week2-advanced-lambda-function-002
+    Type: String
+  LambdaPolicyName:
+    Description: Policy Name
+    Default: yyl-week2-advanced-lambda-policy-002
+    Type: String
+  LambdaRoleName:
+    Description: Lambda Role Name
+    Default: yyl-week2-advanced-lambda-role-002
+    Type: String
+  CloudWatchEventRoleName:
+    Description: CloudWatch Event Role Name
+    Default: yyl-week2-advanced-scheduled-rule
+    Type: String
+Resources:
+  MyLambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${LambdaFunctionName}
+      RetentionInDays: 7
+  MyLambda:
+    Type: AWS::Serverless::Function
+    DependsOn:
+    - MyLambdaLogGroup
+    Properties:
+      FunctionName:
+        Ref: LambdaFunctionName
+      Role:
+        Fn::GetAtt:
+        - MyLambdaRole
+        - Arn
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: s3://yyl-deployment-bucket/lambda/week2/05bbe4178a2f213f2b4cfa580536bd03
+      MemorySize: 128
+      Timeout: 3
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Ref: LambdaRoleName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - MyLambda
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::GetAtt:
+        - CloudWatchEventRole
+        - Arn
+  CloudWatchEventRole:
+    Type: AWS::Events::Rule
+    Properties:
+      Name:
+        Ref: CloudWatchEventRoleName
+      Description: ScheduledRule in CloudWatch Event to trigger Lambda
+      ScheduleExpression: rate(10 minutes)
+      State: ENABLED
+      Targets:
+      - Arn:
+          Fn::GetAtt:
+          - MyLambda
+          - Arn
+        Id:
+          Ref: LambdaFunctionName
+Outputs:
+  MyLambda:
+    Description: Lambda for practice
+    Value:
+      Ref: LambdaFunctionName
